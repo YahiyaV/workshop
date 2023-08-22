@@ -1,0 +1,41 @@
+import pandas as pd
+import numpy as np         
+from sklearn.model_selection import train_test_split  
+from sklearn.linear_model import LinearRegression   
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
+data = pd.read_csv("D:\yahiya\workshop\gpa_study_hours.csv")
+
+x=data[["study_hours"]]
+y=data["gpa"]
+
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2)
+
+lr=LinearRegression()
+
+lr.fit(x_train,y_train)
+
+y_pred=lr.predict(x_test)
+
+mae = mean_absolute_error(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Mean Absolute Error: {mae:.4f}")
+print(f"Mean Squared Error: {mse:.4f}")
+print(f"Root Mean Squared Error: {rmse:.4f}")
+print(f"R-squared: {r2:.4f}")
+
+hours = (float(input("Enter the hours of study :")))
+hours=np.array([[hours]])
+predicted_gpa = lr.predict(hours)
+print(f"Predicted GPA for {hours[0][0]} hours of study: {predicted_gpa[0]}")
+
+plt.scatter(x_test, y_test, color='blue')
+plt.plot(x_test, y_pred, color='red')
+plt.xlabel('Hours of Study')
+plt.ylabel('GPA')
+plt.title('Linear Regression: GPA vs Hours of Study')
+plt.show()
